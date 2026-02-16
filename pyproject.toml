@@ -29,6 +29,9 @@ dependencies = [
         "bilby_pipe @ git+https://git.ligo.org/charlie.hoy/bilby_pipe.git@input_class"
 ]
 
+[project.optional-dependencies]
+seobnr = [pyseobnr]
+
 [tool.setuptools.package-data]
 interpolants = ["bilby_nr/interp/NatureAstronomy.XXX.YYY.2025.*.txt"]
 
