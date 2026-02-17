@@ -38,6 +38,11 @@ test = [
         "pytest",
         "pytest-cov"
 ]
+docs = [
+        "Sphinx >=1.2.2",
+	"sphinx-immaterial",
+        "sphinx-tabs"
+]
 
 [tool.setuptools.package-data]
 interpolants = ["bilby_nr/interp/NatureAstronomy.XXX.YYY.2025.*.txt"]
