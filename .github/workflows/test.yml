@@ -32,7 +32,7 @@ jobs:
     - name: Coverage report
       run: |
         python -m coverage report --show-missing
-        coverage-badge -o coverage_badge.svg -f
+        genbadge coverage --input-file pytest.xml
 
     - name: Upload test results
       if: always()
@@ -41,4 +41,4 @@ jobs:
         name: pytest-${{ matrix.python-version }}
         path: |
           pytest.xml
-          coverage_badge.svg
+          coverage-badge.svg
