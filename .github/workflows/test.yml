@@ -43,13 +43,9 @@ jobs:
 
     - name: Upload test results
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
-        name: pytest-${{ matrix.python-version }}
-        path: |
-          pytest.xml
-          coverage.xml
-          coverage-badge.svg
+        path: coverage-badge.svg
 
   deploy:
     environment:
@@ -62,4 +58,4 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          artifact_name: pytest-3.11
+          artifact_name: coverage-badge.svg
