@@ -45,6 +45,7 @@ jobs:
       if: matrix.python-version == '3.11'
       uses: actions/upload-artifact@v4
       with:
+        name: coverage-badge
         path: coverage-badge.svg
 
   deploy:
@@ -58,4 +59,4 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          artifact_name: coverage-badge.svg
+          artifact_name: coverage-badge
