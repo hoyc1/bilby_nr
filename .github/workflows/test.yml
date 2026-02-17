@@ -40,25 +40,51 @@ jobs:
         python -m coverage report --show-missing
         python -m coverage xml -o coverage.xml
         genbadge coverage --input-file coverage.xml
-        mkdir -p badges
-        mv coverage-badge.svg badges
 
     - name: Upload test results
       if: matrix.python-version == '3.11'
       uses: actions/upload-artifact@v4
       with:
-        name: coverage-badge
-        path: badges
+        path: coverage-badge.svg
+
+  docs:
+    runs-on: ubuntu-latest
+    needs: test
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: ${{ matrix.python-version }} tests
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install package
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+        python -m pip install .[docs]
+    - name: Build docs
+      run: |
+        cd docs
+        make clean
+        make html
+        cd -
+    # Upload the build docs as an artifact until we expose the pages
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: docs/_build/html/
 
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: test
+    needs: docs
     steps:
-      - name: Deploy coverage bage to GitHub Pages
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          artifact_name: coverage-badge
