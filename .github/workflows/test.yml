@@ -42,7 +42,7 @@ jobs:
         genbadge coverage --input-file coverage.xml
 
     - name: Upload test results
-      if: always()
+      if: matrix.python-version == '3.11'
       uses: actions/upload-artifact@v4
       with:
         path: coverage-badge.svg
