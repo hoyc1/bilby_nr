@@ -38,7 +38,7 @@ test = [
         "pytest-cov"
 ]
 docs = [
-        "genbadge[coverage]"
+        "genbadge[coverage]",
         "sphinx<9.0.0", # due to incompatibility with sphinx-tabs
 	"sphinx-immaterial",
         "sphinx-tabs"
