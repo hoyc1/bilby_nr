@@ -1,4 +1,4 @@
-# bilby_nr
+# bilby NR
 
 ## Development status
 
