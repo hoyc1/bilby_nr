@@ -1,6 +1,6 @@
 # bilby_nr
 
-[![Coverage report](https://hoyc1.github.io/bilby_nr/coverage-badge.svg)](https://hoyc1.github.io/bilby_nr/coverage.xml)
+[![Coverage report](https://hoyc1.github.io/bilby_nr/coverage-badge.svg)](https://hoyc1.github.io/bilby_nr/coverage.xml) [![Test](https://github.com/hoyc1/bilby_nr/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/hoyc1/bilby_nr/actions/workflows/test.yml)
 
 Python package to incorporate model accuracy into gravitational wave Bayesian analyses
 
