@@ -86,4 +86,3 @@ The citation in various formats is given below:
             Nature Astron. \textbf{9}, no.8, 1256-1267 (2025)
             doi:10.1038/s41550-025-02579-7
             [arXiv:2409.19404 [gr-qc]].
-%12 citations counted in INSPIRE as of 17 Feb 2026
