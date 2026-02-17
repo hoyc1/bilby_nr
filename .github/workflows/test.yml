@@ -30,10 +30,15 @@ jobs:
       run: python -m pytest --pyargs bilby_nr.tests --cov=bilby_nr --cov-report xml --cov-report term:skip-covered --junitxml=pytest.xml
 
     - name: Coverage report
-      run: python -m coverage report --show-missing
+      run: |
+        python -m coverage report --show-missing
+        coverage-badge -o coverage_badge.svg -f
+
     - name: Upload test results
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: pytest-${{ matrix.python-version }}
-        path: pytest.xml
+        path: |
+          pytest.xml
+          coverage_badge.svg

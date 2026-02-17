@@ -34,6 +34,7 @@ seobnr = [
         "pyseobnr"
 ]
 test = [
+        "coverage-badge",
         "pytest",
         "pytest-cov"
 ]
