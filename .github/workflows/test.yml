@@ -77,6 +77,7 @@ jobs:
         cd -
 
     - name: Generate coverage badge
+      run: |
         mv coverage.xml docs/_build/html/
         cd docs/_build/html/
         genbadge coverage --input-file coverage.xml
