@@ -42,16 +42,5 @@ jobs:
         name: pytest-${{ matrix.python-version }}
         path: |
           pytest.xml
+          coverage.xml
           coverage-badge.svg
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    needs: test
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
