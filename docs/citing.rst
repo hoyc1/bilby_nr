@@ -1,5 +1,5 @@
-Citing bil§by LISA
-=================
+Citing bilby NR
+===============
 
 If you have used :code:`bilby_nr` as part of a project that leads to a
 scientific publication, please add the following acknowledge statement:
