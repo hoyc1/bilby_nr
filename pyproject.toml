@@ -33,6 +33,10 @@ dependencies = [
 seobnr = [
         "pyseobnr"
 ]
+test = [
+        "pytest",
+        "pytest-cov"
+]
 
 [tool.setuptools.package-data]
 interpolants = ["bilby_nr/interp/NatureAstronomy.XXX.YYY.2025.*.txt"]
