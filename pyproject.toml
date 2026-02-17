@@ -25,7 +25,7 @@ classifiers = [
 requires-python = ">=3.11"
 dependencies = [
         "numpy",
-	"bilby",
+        "bilby",
         "bilby_pipe @ git+https://git.ligo.org/charlie.hoy/bilby_pipe.git@input_class"
 ]
 
@@ -40,7 +40,7 @@ test = [
 docs = [
         "genbadge[coverage]",
         "sphinx<9.0.0", # due to incompatibility with sphinx-tabs
-	"sphinx-immaterial",
+        "sphinx-immaterial",
         "sphinx-tabs"
 ]
 
@@ -50,21 +50,20 @@ test_configs = ["bilby_nr/tests/*.ini"]
 
 [tool.setuptools]
 packages = [
-	"bilby_nr",
+        "bilby_nr",
         "bilby_nr.interp",
         "bilby_nr.tests"
 ]
 license-files = [
-	"LICENSE.md",
+        "LICENSE.md",
 ]
 
 [tool.setuptools_scm]
 
 [tool.coverage.run]
 source = [
-	"./bilby_nr"
+        "./bilby_nr"
 ]
 omit = [
-	"bilby_nr/tests/*"
+        "bilby_nr/tests/*"
 ]
-
