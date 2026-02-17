@@ -14,7 +14,7 @@ def convert_waveform_input(string):
         A string representation to be converted
     """
     if string is None:
-        raise VaueError("No input provided")
+        raise ValueError("No input provided")
     if isinstance(string, list):
         string = ",".join(string)
     # Remove square brackets

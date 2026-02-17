@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 
 
 class TestMatchInterpolants(object):
@@ -55,3 +56,22 @@ class TestMatchInterpolants(object):
             interp="pade_pade"
         )
         np.testing.assert_almost_equal(match, [0.9926632521327353])
+
+    def test_invalid_interpolant(self):
+        from bilby_nr.match import match_from_interpolant
+
+        with pytest.raises(ValueError):
+            match = match_from_interpolant(
+                self.waveform_approximant,
+                self.parameters["mass_1"],
+                self.parameters["mass_2"],
+                self.parameters["a_1"],
+                self.parameters["tilt_1"],
+                self.parameters["phi_12"],
+                self.parameters["a_2"],
+                self.parameters["tilt_2"],
+                self.parameters["phi_jl"],
+                self.parameters["theta_jn"],
+                self.parameters["phase"],
+                interp="unknown"
+            )

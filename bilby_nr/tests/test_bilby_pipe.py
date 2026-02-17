@@ -1,7 +1,11 @@
 from bilby_nr.bilby_pipe import Input
 from bilby.gw.detector.networks import InterferometerList
 from bilby_pipe.utils import BilbyPipeError
+import os
 import pytest
+import tempfile
+
+tmpdir = tempfile.TemporaryDirectory(prefix=".", dir=".").name
 
 
 class TestInput(object):
@@ -61,3 +65,149 @@ class TestInput(object):
                 assert 'waveform_approximant_list' not in args.keys()
             else:
                 assert args['waveform_approximant_list'] == ["A", "B"]
+
+
+def TestMainInput(object):
+    def setup_method(self):
+        from bilby_nr.bilby_pipe import (
+            create_parser, MainInput
+        )
+        from bilby_pipe.main import (
+            create_parser as original_parser,
+            MainInput as OriginalInput
+        )
+        from bilby_pipe.main import parse_args
+
+        self.outdir = tmpdir
+        self.default_args_list = [
+            "--ini",
+            os.path.join(os.path.dirname(__file__), "test_config.ini"),
+            "--outdir",
+            self.outdir,
+        ]
+        self.my_parser = create_parser()
+        self.my_inputs = MainInput(
+            *parse_args(self.default_args_list, self.my_parser), test=True
+        )
+        self.original_parser = original_parser()
+        self.original_inputs = OriginalInput(
+            *parse_args(self.default_args_list, self.original_parser),
+            test=True
+        )
+
+    def teardown_method(self):
+        if os.path.isdir(tmpdir):
+            shutil.rmtree(tmpdir)
+
+    def test_original_behaviour(self):
+        keys = vars(self.original_inputs).keys()
+        for key in keys:
+            if key in ["known_args"]:
+                continue
+            _orig = getattr(self.original_inputs, key)
+            _new = getattr(self.my_inputs, key)
+            assert _orig == _new
+
+    def test_new_options(self):
+        from bilby_nr.bilby_pipe import (
+            create_parser, MainInput
+        )
+        from bilby_pipe.main import parse_args
+
+        self.outdir = tmpdir
+        self.default_args_list = [
+            "--ini",
+            os.path.join(
+                os.path.dirname(__file__),
+                "test_config_with_additional_arguments.ini"
+            ),
+            "--outdir",
+            self.outdir,
+        ]
+        self.my_parser = create_parser()
+        self.my_inputs = MainInput(
+            *parse_args(self.default_args_list, self.my_parser), test=True
+        )
+        assert sorted(self.my_inputs.waveform_approximant) == sorted([
+            "IMRPhenomXPHMST", "IMRPhenomTPHM", "SEOBNRv5PHM"
+        ])
+        wvf_args = self.my_inputs.get_default_waveform_arguments()
+        assert sorted(wvf_args["waveform_approximant_list"]) == sorted([
+            "IMRPhenomXPHMST", "IMRPhenomTPHM", "SEOBNRv5PHM"
+        ])
+        assert wvf_args["waveform_approximant"] == sorted([
+            "IMRPhenomXPHMST", "IMRPhenomTPHM", "SEOBNRv5PHM"
+        ])[0]
+
+
+class TestDataAnalysisInput(object):
+    def setup_method(self):
+        from bilby_nr.bilby_pipe import (
+            create_parser, DataAnalysisInput
+        )
+        from bilby_pipe.data_analysis import (
+            create_analysis_parser as original_parser,
+            DataAnalysisInput as OriginalInput
+        )
+        from bilby_pipe.main import parse_args
+
+        self.outdir = tmpdir
+        self.default_args_list = [
+            "--ini",
+            os.path.join(os.path.dirname(__file__), "test_config.ini"),
+            "--outdir",
+            self.outdir,
+        ]
+        self.my_parser = create_parser()
+        self.my_inputs = DataAnalysisInput(
+            *parse_args(self.default_args_list, self.my_parser), test=True
+        )
+        self.original_parser = original_parser()
+        self.original_inputs = OriginalInput(
+            *parse_args(self.default_args_list, self.original_parser),
+            test=True
+        )
+
+    def teardown_method(self):
+        if os.path.isdir(tmpdir):
+            shutil.rmtree(tmpdir) 
+
+    def test_original_behaviour(self):
+        keys = vars(self.original_inputs).keys()
+        for key in keys:
+            if key in ["known_args"]:
+                continue
+            _orig = getattr(self.original_inputs, key)
+            _new = getattr(self.my_inputs, key)
+            assert _orig == _new
+
+    def test_new_options(self):
+        from bilby_nr.bilby_pipe import (
+            create_parser, DataAnalysisInput
+        )
+        from bilby_pipe.main import parse_args
+
+        self.outdir = tmpdir
+        self.default_args_list = [
+            "--ini",
+            os.path.join(
+                os.path.dirname(__file__),
+                "test_config_with_additional_arguments.ini"
+            ),
+            "--outdir",
+            self.outdir,
+        ]
+        self.my_parser = create_parser()
+        self.my_inputs = DataAnalysisInput(
+            *parse_args(self.default_args_list, self.my_parser), test=True
+        )
+        assert sorted(self.my_inputs.waveform_approximant) == sorted([
+            "IMRPhenomXPHMST", "IMRPhenomTPHM", "SEOBNRv5PHM"
+        ])
+        wvf_args = self.my_inputs.get_default_waveform_arguments()
+        assert sorted(wvf_args["waveform_approximant_list"]) == sorted([
+            "IMRPhenomXPHMST", "IMRPhenomTPHM", "SEOBNRv5PHM"
+        ])
+        assert wvf_args["waveform_approximant"] == sorted([
+            "IMRPhenomXPHMST", "IMRPhenomTPHM", "SEOBNRv5PHM"
+        ])[0]

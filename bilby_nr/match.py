@@ -20,15 +20,12 @@ def match_from_interpolant(*args, interp="pade_pade"):
     match: float
         The estimated match
     """
-    allowed_interps = ["pade_pade"]
-    if interp not in allowed_interps:
+    if interp not in interpolant_map.keys():
         raise ValueError(
             f"Unable to evaluate the mismatch interpolant using {interp}. "
-            f"Only allowed interpolants are: {','.join(allowed_interps)}"
+            f"Only allowed interpolants are: {','.join(interpolant_map.keys())}"
         )
-    if interp == "pade_pade":
-        return match_from_pade_pade_interpolant(*args)
-    return
+    return interpolant_map[interp](*args)
 
 
 def match_from_pade_pade_interpolant(
@@ -82,3 +79,8 @@ def match_from_pade_pade_interpolant(
         waveform_approximant, mass_1, mass_2, a_1, tilt_1, phi_12, a_2,
         tilt_2, phi_jl, theta_jn, phase
     )
+
+
+interpolant_map = {
+    "pade_pade": match_from_pade_pade_interpolant,
+}

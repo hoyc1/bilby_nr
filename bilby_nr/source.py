@@ -199,7 +199,10 @@ def _multi_model_binary_black_hole(
         The polarizations
     """
     if not np.any(weights):
-        waveform_approximant = waveform_approximant_list[0]
+        raise ValueError(
+            "All weights are non-numeric. Please provide a numeric weight for "
+            "each approximant in the list"
+        )
     elif len(weights) != len(waveform_approximant_list):
         raise ValueError(
             "Please provide a weight for each approximant in the list"

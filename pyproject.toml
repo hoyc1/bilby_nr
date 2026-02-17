@@ -30,10 +30,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-seobnr = [pyseobnr]
+seobnr = [
+        "pyseobnr"
+]
 
 [tool.setuptools.package-data]
 interpolants = ["bilby_nr/interp/NatureAstronomy.XXX.YYY.2025.*.txt"]
+test_configs = ["bilby_nr/tests/*.ini"]
 
 [tool.setuptools]
 packages = [
@@ -46,3 +49,12 @@ license-files = [
 ]
 
 [tool.setuptools_scm]
+
+[tool.coverage.run]
+source = [
+	"./bilby_nr"
+]
+omit = [
+	"bilby_nr/tests/*"
+]
+

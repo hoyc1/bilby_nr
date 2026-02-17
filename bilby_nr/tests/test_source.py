@@ -65,6 +65,26 @@ class TestMultiModelModel(object):
             pols = multi_model_binary_black_hole(
                 self.frequency_array, **self.parameters
             )
+        _wvf_args = self.waveform_kwargs.copy()
+        _wvf_args["match_interpolant"] = "bilby_nr.match.no_match_interp"
+        with pytest.raises(ValueError):
+            self.parameters.update(_wvf_args)
+            pols = multi_model_binary_black_hole(
+                self.frequency_array, **self.parameters
+            )
+
+    def test_multi_model_binary_black_hole_incorrect_weights(self):
+        from bilby_nr.source import _multi_model_binary_black_hole
+        with pytest.raises(ValueError):
+            pols = _multi_model_binary_black_hole(
+                [None, None], self.waveform_kwargs["waveform_approximant_list"],
+                self.frequency_array, **self.parameters
+            )
+        with pytest.raises(ValueError):
+            pols = _multi_model_binary_black_hole(
+                [1.], self.waveform_kwargs["waveform_approximant_list"],
+                self.frequency_array, **self.parameters
+            )
 
 
 def test_weights_from_matches():
