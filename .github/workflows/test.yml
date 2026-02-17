@@ -1,5 +1,11 @@
 name: Test
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  packages: read
+
 on:
   push:
     branches: [ main ]
@@ -44,3 +50,14 @@ jobs:
           pytest.xml
           coverage.xml
           coverage-badge.svg
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Deploy coverage bage to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
