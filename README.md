@@ -6,6 +6,29 @@
 
 This Python package incorporates model accuracy into gravitational wave Bayesian analyses via the bilby Python package.
 
+## Installation
+
+`bilby_nr` is currently available via PyPI and can be installed with:
+
+```bash
+pip install bilby_nr
+```
+
+For full installation instructions, see [our documentation](https://hoyc1.github.io/bilby_nr/installation.html).
+
+## Usage in bilby_pipe
+
+The functionality in `bilby_nr` can be used with `bilby_pipe` as you would with any other frequency domain source model. It simply requires the following options to be specified in your configuration file:
+
+```ini
+analysis_executable_parser=bilby_nr.bilby_pipe.create_parser
+waveform-approximant=IMRPhenomXPHMST,IMRPhenomTPHM,SEOBNRv5PHM
+frequency-domain-source-model = bilby_nr.source.multi_model_binary_black_hole
+waveform-arguments-dict={'match_interpolant': 'bilby_nr.match.match_from_pade_pade_interpolant'}
+```
+
+## Citing
+
 If you find `bilby_nr` useful in your work please cite the following papers:
 
 ```bibtex
