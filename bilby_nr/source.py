@@ -45,7 +45,9 @@ def multi_model_binary_black_hole(
         those allowed in bilby. For example:
 
             - waveform_approximant_list: a list of waveform approximants
-              you wish to sample over
+              you wish to sample over. If the user provides the waveform
+              approximant 'IMRPhenomXPHMST', we populate the required flags
+              to use the Spin-Taylor (ST) variant of IMRPhenomXPHM.
             - match_interpolant: the interpolant you wish to use to estimate the
               match for a given region in the parameter space
             - use_best_match: always use the model with the best match to
