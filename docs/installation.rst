@@ -16,6 +16,7 @@ installed with,
              $ mamba env create --name bilby-nr python=3.11
              $ mamba activate bilby-nr
              $ python -m pip install bilby_nr
+             $ python -m pip install 'bilby_pipe @ git+https://git.ligo.org/charlie.hoy/bilby_pipe.git@input_class'
 
         .. warning::
 
@@ -48,6 +49,7 @@ installed with,
             $ git clone git@github.com:hoyc1/bilby_nr.git
             $ cd bilby_nr
             $ python -m pip install .
+            $ python -m pip install 'bilby_pipe @ git+https://git.ligo.org/charlie.hoy/bilby_pipe.git@input_class'
 
         .. warning::
 

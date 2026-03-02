@@ -11,8 +11,21 @@ This Python package incorporates model accuracy into gravitational wave Bayesian
 `bilby_nr` is currently available via PyPI and can be installed with:
 
 ```bash
-pip install bilby_nr
+$ pip install bilby_nr
 ```
+
+Once `bilby_nr` has been installed, a custom version of `bilby_pipe` needs to
+be installed with:
+
+```bash
+$ pip install 'bilby_pipe @ git+https://git.ligo.org/charlie.hoy/bilby_pipe.git@input_class'
+```
+
+This version needs to be installed because we are waiting for required code to
+be merged into the main `bilby_pipe` code base. Please see the following merge
+request for details:
+
+    * `bilby_pipe!583 <https://git.ligo.org/lscsoft/bilby_pipe/-/merge_requests/583>`_
 
 For full installation instructions, see [our documentation](https://hoyc1.github.io/bilby_nr/installation.html).
 
