@@ -70,6 +70,7 @@ def test_generate_all_bbh_parameters():
 def test_determine_waveform_approximant_from_likelihood():
     import bilby
     from gwpy.timeseries import TimeSeries
+    from pandas import DataFrame
 
     likelihood, ifo_list, waveform_generator = _setup()
     sample = {
@@ -87,6 +88,14 @@ def test_determine_waveform_approximant_from_likelihood():
     sample["log_likelihood"] = logl
     model = determine_waveform_approximant_from_likelihood(
         sample, ["IMRPhenomPv2", "IMRPhenomTPHM", "IMRPhenomXPHM"],
+        likelihood
+    )
+    assert model == "IMRPhenomTPHM"
+
+    # try passing a pandas dataframe instead
+    _sample = DataFrame(sample, index=[0])
+    model = determine_waveform_approximant_from_likelihood(
+        _sample, ["IMRPhenomPv2", "IMRPhenomTPHM", "IMRPhenomXPHM"],
         likelihood
     )
     assert model == "IMRPhenomTPHM"

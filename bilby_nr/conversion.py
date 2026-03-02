@@ -204,22 +204,25 @@ def determine_waveform_approximant_from_likelihood(
         likelihood object that was used during the sampling
     """
     _chosen_model = None
-    if "log_likelihood" not in sample.keys():
+    _sample = sample.copy()
+    if "log_likelihood" not in _sample.keys():
         raise ValueError(
             "Unable to determine which model ws used to evaluate the "
             "likelihood as there is no 'log_likelihood' entry in the provided "
             "samples."
         )
-    original = sample["log_likelihood"]
+    original = _sample.pop("log_likelihood")
     if not isinstance(original, (float, int, np.number)):
-        if isinstance(sample, dict):
+        if isinstance(_sample, dict):
             original = original[0]
         else:
             original = original.values[0]
+            _sample = _sample.to_dict(orient="list")
+            _sample = {key: item[0] for key, item in _sample.items()}
 
     for model in waveform_approximant_list:
         _likelihood = copy.deepcopy(likelihood)
-        logl = _likelihood_for_given_model(sample, model, _likelihood)
+        logl = _likelihood_for_given_model(_sample, model, _likelihood)
         if np.isclose(logl, original):
             _chosen_model = model
             break
@@ -236,7 +239,7 @@ def _likelihood_for_given_model(sample, waveform_approximant, likelihood):
 
     Parameters
     ----------
-    sample: dict, pandas.DataFrame
+    sample: dict
         the sample you wish to evaluate the likelihood for
     waveform_approximant: str
         the waveform approximant you wish to evaluate the likelihood for
@@ -255,18 +258,12 @@ def _likelihood_for_given_model(sample, waveform_approximant, likelihood):
     ]
     _lkl.waveform_generator.waveform_arguments["waveform_approximant"] = \
         waveform_approximant
-    if isinstance(sample, dict):
-        _sample = {
-            key: item for key, item in sample.items() if key not in
-            ["log_likelihood", "log_prior"]
-        }
-        if not isinstance(list(_sample.values())[0], (float, int, np.number)):
-            _sample = {key: item[0] for key, item in _sample.items()}
-    else:
-        _sample = {
-            key: item.values[0] for key, item in sample.items() if key not in
-            ["log_likelihood", "log_prior"]
-        }
+    _sample = {
+        key: item for key, item in sample.items() if key not in
+        ["log_likelihood", "log_prior"]
+    }
+    if not isinstance(list(_sample.values())[0], (float, int, np.number)):
+        _sample = {key: item[0] for key, item in _sample.items()}
             
     if _lkl.distance_marginalization:
         _sample["luminosity_distance"] = _lkl._ref_dist
