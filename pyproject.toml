@@ -28,7 +28,7 @@ requires-python = ">=3.11"
 dependencies = [
         "numpy",
         "bilby",
-        "bilby_pipe"
+        "bilby_pipe @ git+https://git.ligo.org/charlie.hoy/bilby_pipe.git@input_class"
 ]
 
 [project.optional-dependencies]
