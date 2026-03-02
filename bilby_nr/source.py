@@ -278,7 +278,7 @@ def _weights_from_matches(matches, use_best=False, mapping=None):
         if "matches" not in mapping:
             raise ValueError(
                 f"{mapping} must be a string that can be evaluated and contain "
-                f"a variable called: 'match'"
+                f"a variable called: 'matches'"
             )
         if "=" in mapping:
             raise ValueError(
