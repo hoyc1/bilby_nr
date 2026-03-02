@@ -2,9 +2,8 @@
 
 import numpy as np
 import os
-from ..conversion import (
-    chi_par_chi_perp_from_mass_spin, component_masses_to_symmetric_mass_ratio
-)
+from bilby.gw.conversion import component_masses_to_symmetric_mass_ratio
+from ..conversion import chi_par_chi_perp_from_mass_spin
 
 __author__ = ["Charlie Hoy <charlie.hoy@port.ac.uk>"]
 

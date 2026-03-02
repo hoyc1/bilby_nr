@@ -224,7 +224,7 @@ def _multi_model_binary_black_hole(
             {
                 "waveform_approximant": "IMRPhenomXPHM",
                 "PhenomXPrecVersion": 320,
-                "PhenomXPFinalSpinMod": 4,
+                "PhenomXPFinalSpinMod": 2,
                 "PhenomXHMReleaseVersion": 122022
             }
         )
