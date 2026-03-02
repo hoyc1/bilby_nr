@@ -1,7 +1,5 @@
 # bilby NR
 
-## Development status
-
 [![PyPI version](https://img.shields.io/pypi/v/bilby_nr)](https://img.shields.io/pypi/v/bilby_nr)
 
 [![Coverage report](https://hoyc1.github.io/bilby_nr/coverage-badge.svg)](https://hoyc1.github.io/bilby_nr/coverage.xml) [![Pipeline Status](https://github.com/hoyc1/bilby_nr/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/hoyc1/bilby_nr/actions/workflows/test.yml)
