@@ -99,4 +99,27 @@ def test_weights_from_matches():
     for opt in ["False", False, 0]:
         weights = _weights_from_matches(matches, use_best=False)
         np.testing.assert_almost_equal(weights, _true)
-    
+
+
+def test_weights_from_matches_custom_mapping():
+    from bilby_nr.source import _weights_from_matches
+    matches = np.array([0.3, 0.9, 0.8])
+    recommended = _weights_from_matches(matches)
+    string_input = _weights_from_matches(
+        matches, mapping="1 / ((1 - matches)**4)"
+    )
+    np.testing.assert_almost_equal(recommended, string_input)
+
+    # test the various failure modes
+    with pytest.raises(ValueError):
+        string_input = _weights_from_matches(
+            matches, mapping="1 / ((1 - variable)**4)"
+        )
+    with pytest.raises(ValueError):
+        string_input = _weights_from_matches(
+            matches, mapping="weights = 1 / ((1 - matches)**4)"
+        )
+    with pytest.raises(ValueError):
+        string_input = _weights_from_matches(
+            matches, mapping="1 / ((1 - (matches + unknown_variable))**4)"
+        )

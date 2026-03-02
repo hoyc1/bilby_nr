@@ -41,7 +41,18 @@ def multi_model_binary_black_hole(
     phase: float
         The phase of the gravitational wave
     kwargs: dict
-        Additional keyword arguments
+        Additional keyword arguments. We support additional arguments beyond
+        those allowed in bilby. For example:
+
+            - waveform_approximant_list: a list of waveform approximants
+              you wish to sample over
+            - match_interpolant: the interpolant you wish to use to estimate the
+              match for a given region in the parameter space
+            - use_best_match: always use the model with the best match to
+              evaluate the likelihood
+            - match_to_weight: a string that can be evaluated to map an array
+              of matches to a series of weights. The model will then be
+              chosen probabilistically based on the weights.
 
     Returns
     -------
@@ -141,9 +152,10 @@ def _multi_model_match_informed_binary_black_hole(
     # protect against negative matches
     _matches[_matches < 0.] = 0.
     use_best = kwargs.pop("use_best_match", False)
+    mapping = kwargs.pop("match_to_weight", None)
     if isinstance(use_best, str):
         use_best = ast.literal_eval(use_best)
-    _weights = _weights_from_matches(_matches, use_best=use_best)
+    _weights = _weights_from_matches(_matches, use_best=use_best, mapping=mapping)
     return _multi_model_binary_black_hole(
         _weights, waveform_approximant_list, frequency_array, mass_1, mass_2,
         luminosity_distance, a_1, tilt_1, phi_12, a_2, tilt_2, phi_jl,
@@ -234,9 +246,10 @@ def _multi_model_binary_black_hole(
     )
 
 
-def _weights_from_matches(matches, use_best=False):
-    """Calculate a weight based on the match to numerical relativity. We use
-    the recommendation from https://www.nature.com/articles/s41550-025-02579-7,
+def _weights_from_matches(matches, use_best=False, mapping=None):
+    """Calculate a weight based on the match to numerical relativity. If
+    mapping is None, we use the recommendation from
+    https://www.nature.com/articles/s41550-025-02579-7,
     i.e. weight = 1 / (1 - match)**4
 
     Parameters
@@ -246,12 +259,38 @@ def _weights_from_matches(matches, use_best=False):
     use_best: bool, optional
         if True, return a weight of 1 for the highest match and 0 for all other
         models. Default False
+    mapping: str, optional
+        a string that can be evaluated to map an array of matches to a series of
+        weights. The string must contain the variable 'matches' and should
+        contain the right hand side of the equation 'weights = f(matches)'.
+        For example, you could provide '1 / ((1 - matches)**4)'. The weights
+        will be rescaled to be between 0 and 1.
     """
     if use_best:
         weights = np.zeros(len(matches))
         weights[np.argmax(matches)] = 1.
-    else:
+        return weights
+    if mapping is None:
         weights = 1 / ((1 - matches)**4)
-        weights /= np.sum(weights)
-        weights[np.isnan(weights)] = 0.
+    else:
+        if "matches" not in mapping:
+            raise ValueError(
+                f"{mapping} must be a string that can be evaluated and contain "
+                f"a variable called: 'match'"
+            )
+        if "=" in mapping:
+            raise ValueError(
+                f"{mapping} must not contain '='. It should contain the "
+                f"right hand side of the equation 'weights = f(matches)'. For "
+                f"example, you could provide '1 / ((1 - matches)**4)'"
+            )
+        try:
+            weights = eval(mapping)
+        except Exception as e:
+            raise ValueError(
+                f"Unable to generate weights from matches for the string "
+                f"{mapping}."
+            )
+    weights /= np.sum(weights)
+    weights[np.isnan(weights)] = 0.
     return weights
