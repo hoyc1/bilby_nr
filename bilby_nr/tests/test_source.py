@@ -63,11 +63,14 @@ class TestMultiModelModel(object):
         _wvf_args["catch_waveform_errors"] = False
         _wvf_args["match_interpolant"] = "fake.fake_interpolant"
         with pytest.raises(ValueError):
+            self.parameters.update(_wvf_args)
             pols = multi_model_binary_black_hole(
                 self.frequency_array, **self.parameters
             )
+        _wvf_args = self.waveform_kwargs.copy()
         _wvf_args["catch_waveform_errors"] = True
         _wvf_args["match_interpolant"] = "fake.fake_interpolant"
+        self.parameters.update(_wvf_args)
         pols = multi_model_binary_black_hole(
             self.frequency_array, **self.parameters
         )
@@ -79,6 +82,7 @@ class TestMultiModelModel(object):
         _wvf_args["catch_waveform_errors"] = False
         _wvf_args["match_interpolant"] = "fake.fake_interpolant"
         with pytest.raises(ValueError):
+            self.parameters.update(_wvf_args)
             pols = multi_model_binary_black_hole(
                 self.frequency_array, **self.parameters
             )
