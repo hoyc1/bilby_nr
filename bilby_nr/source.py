@@ -212,8 +212,9 @@ def _multi_model_binary_black_hole(
     """
     if not np.any(weights):
         raise ValueError(
-            "All weights are non-numeric. Please provide a numeric weight for "
-            "each approximant in the list"
+            "Internal function call failed: Input domain error. All weights "
+            "are non-numeric. Please provide a numeric weight for each "
+            "approximant in the list"
         )
     elif len(weights) != len(waveform_approximant_list):
         raise ValueError(
