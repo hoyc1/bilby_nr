@@ -2,6 +2,7 @@
 
 import numpy as np
 from bilby.gw import source
+from bilby.core.utils import logger
 import ast
 from .utils import convert_waveform_list_from_input
 
@@ -71,18 +72,37 @@ def multi_model_binary_black_hole(
         waveform_approximant_list
     )
     match_interpolant = kwargs.pop("match_interpolant", None)
-    if match_interpolant is not None:
-        return _multi_model_match_informed_binary_black_hole(
-            match_interpolant, waveform_approximant_list, frequency_array,
-            mass_1, mass_2, luminosity_distance, a_1, tilt_1, phi_12, a_2,
-            tilt_2, phi_jl, theta_jn, phase, **kwargs
+    catch_waveform_errors = kwargs.get("catch_waveform_errors", False)
+    try:
+        if match_interpolant is not None:
+            return _multi_model_match_informed_binary_black_hole(
+                match_interpolant, waveform_approximant_list, frequency_array,
+                mass_1, mass_2, luminosity_distance, a_1, tilt_1, phi_12, a_2,
+                tilt_2, phi_jl, theta_jn, phase, **kwargs
+            )
+        return _multi_model_binary_black_hole(
+            np.ones(len(waveform_approximant_list)) / len(waveform_approximant_list),
+            waveform_approximant_list, frequency_array, mass_1, mass_2,
+            luminosity_distance, a_1, tilt_1, phi_12, a_2, tilt_2, phi_jl, theta_jn,
+            phase, **kwargs
         )
-    return _multi_model_binary_black_hole(
-        np.ones(len(waveform_approximant_list)) / len(waveform_approximant_list),
-        waveform_approximant_list, frequency_array, mass_1, mass_2,
-        luminosity_distance, a_1, tilt_1, phi_12, a_2, tilt_2, phi_jl, theta_jn,
-        phase, **kwargs
-    )
+    except Exception as e:
+        if not catch_waveform_errors:
+            raise
+
+        failed_parameters = dict(
+            mass_1=mass_1, mass_2=mass_2,
+            a_1=a_1, tilt_1=tilt_1, phi_12=phi_12,
+            a_2=a_2, tilt_2=tilt_2, phi_jl=phi_jl,
+            luminosity_distance=luminosity_distance,
+            theta_jn=theta_jn, phase=phase,
+        )
+        logger.warning(
+            "Evaluating the waveform failed with error: {}\n".format(e) +
+            "The parameters were {}\n".format(failed_parameters) +
+            "Likelihood will be set to -inf."
+        )
+        return None
 
 
 def _multi_model_match_informed_binary_black_hole(
@@ -214,9 +234,8 @@ def _multi_model_binary_black_hole(
     """
     if not np.any(weights):
         raise ValueError(
-            "Internal function call failed: Input domain error. All weights "
-            "are non-numeric. Please provide a numeric weight for each "
-            "approximant in the list"
+            "Input domain error. All weights are non-numeric. Please provide a "
+            "numeric weight for each approximant in the list"
         )
     elif len(weights) != len(waveform_approximant_list):
         raise ValueError(
